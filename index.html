@@ -1,109 +1,44 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#102f28">
-<meta name="description" content="Jogo educativo PWA sobre alimentação e saúde reprodutiva.">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="assets/icon-192.png">
-<link rel="stylesheet" href="style.css">
-<title>Missão Fertilidade — Alimentação em Jogo</title>
-</head>
-<body>
-<div id="app">
-  <header class="topbar">
-    <button class="brand" id="homeBtn" aria-label="Voltar ao início"><span>🌿</span><b>Missão Fertilidade</b></button>
-    <div class="hud-mini" id="miniHud" hidden><span>⭐ <b id="scoreMini">0</b></span><span>🪙 <b id="coinsMini">0</b></span></div>
-    <nav class="top-actions" aria-label="Ações do aplicativo">
-      <button id="soundBtn" class="icon-btn" aria-pressed="true" title="Som">🔊</button>
-      <button id="a11yBtn" class="icon-btn" title="Acessibilidade">♿</button>
-      <button id="installBtn" class="pill" hidden>Instalar</button>
-    </nav>
-  </header>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#063d31"><link rel="manifest" href="manifest.webmanifest"><title>Master Fértil</title><style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#062a23;color:#fff}button{font:inherit}.hide{display:none!important}
+#menu{position:fixed;inset:0;background:linear-gradient(#0003,#001b),url("assets/portal.png") center/cover;display:grid;place-items:center;padding:15px}.box{background:#063d31e8;border:2px solid #51e5bd;border-radius:24px;padding:20px;width:min(850px,96vw);text-align:center}.pick{display:flex;justify-content:center;gap:15px}.c{background:#0a5547;color:white;border:3px solid transparent;border-radius:18px;padding:10px;width:44%}.c.sel{border-color:#ffd84d}.c img{width:100%;height:230px;object-fit:contain}.go{border:0;border-radius:99px;background:#ffd84d;color:#153b31;padding:14px 25px;font-weight:bold;margin-top:15px}
+#game,#world{position:fixed;inset:0}#world{background:url("assets/garden.png") center/cover}.shade{position:absolute;inset:0;background:linear-gradient(#0002,#0000 60%,#0005);pointer-events:none}
+#hero{position:absolute;z-index:5;width:90px;height:125px;object-fit:contain;left:50%;top:80%;transform:translate(-50%,-75%);filter:drop-shadow(0 7px 4px #0008)}
+.hud{position:absolute;z-index:20;top:10px;left:10px;background:#053d35e8;border:2px solid #3ee0b7;border-radius:16px;padding:10px 14px;font-weight:bold}.money{color:#ffd84d}
+.controls{position:absolute;z-index:20;right:10px;top:10px}.controls button{background:#063d31e8;color:#fff;border:1px solid #fff8;border-radius:12px;padding:10px;font-size:20px}
+#joy{position:absolute;z-index:20;left:18px;bottom:20px;width:145px;height:145px;border-radius:50%;border:2px solid #fff9;background:#123b38bb;touch-action:none}#knob{position:absolute;left:50%;top:50%;width:58px;height:58px;border-radius:50%;background:#dddD;transform:translate(-50%,-50%);border:3px solid white}
+.actions{position:absolute;z-index:20;right:20px;bottom:25px;display:flex;gap:12px}.act{width:76px;height:76px;border-radius:50%;border:2px solid white;background:#063d31dd;color:white;font-size:27px}.act small{display:block;font-size:10px}
+.poi{position:absolute;z-index:4;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#0a6;border:3px solid white;font-size:25px;box-shadow:0 0 0 7px #0a64;animation:p 1.5s infinite}.poi.done{opacity:.35;animation:none}@keyframes p{50%{transform:scale(1.1)}}
+#hint{position:absolute;z-index:15;background:#062f29e8;border:1px solid #52e3bd;padding:7px 11px;border-radius:10px;font-weight:bold;transform:translate(-50%,-110%)}
+#toast{position:absolute;z-index:40;top:80px;left:50%;transform:translateX(-50%);background:#082f29e8;padding:10px 16px;border-radius:99px;opacity:0;transition:.2s}#toast.on{opacity:1}
+#modal{position:fixed;z-index:50;inset:0;background:#001c;display:grid;place-items:center;padding:15px}.panel{width:min(580px,94vw);background:#063d31;border:2px solid #52e3bd;border-radius:22px;padding:20px}.answers{display:grid;gap:9px}.ans{padding:12px;border-radius:12px;border:1px solid #52e3bd;background:#0a5547;color:white;text-align:left}.ok{background:#148950!important}.bad{background:#8b3440!important}
 
-  <main>
-    <section id="homeScreen" class="screen active hero-screen">
-      <div class="hero-copy">
-        <p class="eyebrow">JOGO EDUCATIVO • PWA OFFLINE</p>
-        <h1>Alimentação &amp; Fertilidade</h1>
-        <p class="lead">Explore cinco cenários, colete moedas e responda 30 desafios. Alimentação pode contribuir para a saúde reprodutiva, mas não garante gravidez.</p>
-        <div class="hero-actions"><button id="continueBtn" class="secondary xl" hidden>Continuar</button><button id="changePlayerBtn" class="primary xl" hidden>Trocar jogador</button><button id="startBtn" class="ghost xl">Escolher na tela completa</button></div>
-        <div class="feature-row"><span>🎮 Plataforma 2.5D</span><span>🔊 Som</span><span>♿ Acessível</span><span>🪙 Moedas e pontos</span><span>📴 Offline</span></div>
-        <div class="cover-picker-wrap"><p class="pick-title">Na capa do jogo, escolha quem vai jogar:</p><div class="cover-picker">
-          <button class="player-card cover-player-card" data-player="girl"><img src="assets/sprites/maya_cover.png" alt="Maya, personagem jogável com jardineira rosa e mochila"><strong>Maya</strong><span>Exploradora da horta e da alimentação saudável</span></button>
-          <button class="player-card cover-player-card" data-player="boy"><img src="assets/sprites/theo_cover.png" alt="Theo, personagem jogável com moletom preto e mochila"><strong>Theo</strong><span>Explorador curioso da ciência e da nutrição</span></button>
-        </div></div>
-      </div>
-      <div class="hero-visual" aria-hidden="true"><img src="assets/sprites/maya_cover.png" class="hero-girl hero-maya"><img src="assets/sprites/theo_cover.png" class="hero-guide hero-theo"><div class="glow"></div></div>
-    </section>
-
-    <section id="selectScreen" class="screen">
-      <div class="panel narrow"><p class="eyebrow">ESCOLHA QUEM VAI JOGAR</p><h2>Maya ou Theo</h2><p>Os dois aparecem no jogo, mas somente o personagem escolhido será controlado.</p>
-        <div class="player-grid">
-          <button class="player-card" data-player="girl"><img src="assets/sprites/maya_cover.png" alt="Maya, personagem menina com jardineira rosa e mochila"><strong>Maya</strong><span>Exploradora da horta</span></button>
-          <button class="player-card" data-player="boy"><img src="assets/sprites/theo_cover.png" alt="Theo, personagem menino com moletom preto e mochila"><strong>Theo</strong><span>Explorador curioso</span></button>
-        </div>
-      </div>
-    </section>
-
-    <section id="mapScreen" class="screen">
-      <div class="map-head"><div><p class="eyebrow">MAPA DA MISSÃO</p><h2>5 fases • 30 perguntas</h2><p>Seis desafios em cada cenário. As questões e alternativas são embaralhadas.</p></div><div class="big-score"><span>⭐ <b id="mapScore">0</b> pontos</span><span>🪙 <b id="mapCoins">0</b> moedas</span></div></div>
-      <div id="phaseGrid" class="phase-grid"></div>
-      <div class="map-actions"><button id="galleryBtn" class="secondary">Galeria dos materiais</button><button id="resetBtn" class="ghost">Reiniciar progresso</button></div>
-    </section>
-
-    <section id="gameScreen" class="screen game-screen">
-      <div class="game-hud">
-        <button id="backMapBtn" class="icon-btn" title="Mapa">🗺️</button>
-        <div><small id="phaseLabel">Fase</small><b id="phaseTitle">Cenário</b></div>
-        <div class="spacer"></div>
-        <span class="stat">⭐ <b id="scoreHud">0</b></span><span class="stat">🪙 <b id="coinsHud">0</b></span><span class="stat">❓ <b id="qHud">0/6</b></span>
-      </div>
-      <div id="gameViewport" class="game-viewport" tabindex="0" aria-label="Área do jogo. Use setas ou A e D para mover, espaço para pular e E para interagir.">
-        <div id="world" class="world">
-          <div id="sceneBg" class="scene-bg"></div>
-          <div id="platformLayer" class="platform-layer"></div>
-          <div id="coinLayer" class="coin-layer"></div>
-          <div id="stationLayer" class="station-layer"></div>
-          <img id="playerSprite" class="player-sprite" alt="Personagem jogável">
-          <div id="npcSpot" class="npc-spot" hidden><img id="npcImg" alt="Personagem guia"><div id="npcBubble"></div></div>
-          <div id="exitPortal" class="exit-portal" hidden><span>🏁</span><b>FIM DA FASE</b></div>
-        </div>
-        <div id="interactionHint" class="interaction-hint" hidden><b>E</b> Responder desafio</div>
-      </div>
-      <div class="touch-controls" aria-label="Controles por toque">
-        <button id="leftBtn" aria-label="Mover para esquerda">◀</button><button id="rightBtn" aria-label="Mover para direita">▶</button><button id="jumpBtn" aria-label="Pular">⤒</button><button id="interactBtn" aria-label="Interagir">?</button>
-      </div>
-    </section>
-
-    <section id="finalScreen" class="screen">
-      <div class="panel result-panel"><img id="finalCharacter" src="assets/sprites/girl_trophy.png" alt="Personagem comemorando"><div><p class="eyebrow">MISSÃO CONCLUÍDA</p><h2>Você completou os 30 desafios!</h2><div class="result-numbers"><div><b id="finalScore">0</b><span>pontos</span></div><div><b id="finalCoins">0</b><span>moedas</span></div><div><b id="finalCorrect">0/30</b><span>acertos</span></div></div><p class="final-message">Uma alimentação equilibrada pode contribuir para a saúde reprodutiva de homens e mulheres. Fertilidade depende de vários fatores; dificuldade para engravidar merece avaliação profissional.</p><div class="hero-actions"><button id="playAgainBtn" class="primary">Jogar novamente</button><button id="finalGalleryBtn" class="secondary">Ver galeria</button></div></div></div>
-    </section>
-  </main>
-
-  <dialog id="questionDialog" class="question-dialog">
-    <form method="dialog" class="question-card" id="questionForm">
-      <div class="q-top"><span id="qNumber" class="q-badge">DESAFIO</span><span id="qCategory" class="q-category">Alimentação & Fertilidade</span><button type="button" id="speakQuestionBtn" class="icon-btn" title="Ler pergunta em voz alta">🔈</button></div>
-      <h3 id="qText"></h3><div id="answerList" class="answer-list" role="radiogroup"></div>
-      <div id="feedbackBox" class="feedback-box" aria-live="polite" hidden></div>
-      <div class="q-actions"><button type="button" id="submitAnswerBtn" class="primary">Confirmar resposta</button><button type="button" id="continueQuestionBtn" class="primary" hidden>Continuar</button></div>
-    </form>
-  </dialog>
-
-  <dialog id="briefDialog" class="brief-dialog"><div class="brief-card"><img id="briefNpc" alt="Guia da fase"><div><p id="briefEyebrow" class="eyebrow"></p><h3 id="briefTitle"></h3><p id="briefText"></p><button id="briefGoBtn" class="primary">Entrar na fase</button></div></div></dialog>
-
-  <dialog id="a11yDialog" class="settings-dialog"><div class="settings-card"><div class="modal-head"><h3>Acessibilidade</h3><button id="closeA11y" class="icon-btn">✕</button></div><p>As preferências ficam salvas neste dispositivo.</p>
-    <label class="toggle"><input id="largeTextToggle" type="checkbox"><span>Texto ampliado</span></label>
-    <label class="toggle"><input id="contrastToggle" type="checkbox"><span>Alto contraste</span></label>
-    <label class="toggle"><input id="motionToggle" type="checkbox"><span>Reduzir animações</span></label>
-    <label class="toggle"><input id="autoReadToggle" type="checkbox"><span>Ler perguntas automaticamente</span></label>
-    <label class="range">Volume <input id="volumeRange" type="range" min="0" max="1" step="0.05" value="0.55"></label>
-    <div class="key-help"><b>Teclado</b><span>← → ou A/D: andar</span><span>Espaço/W/↑: pular</span><span>E/Enter: responder</span></div>
-  </div></dialog>
-
-  <dialog id="galleryDialog" class="gallery-dialog"><div class="gallery-card"><div class="modal-head"><div><p class="eyebrow">MATERIAIS RECEBIDOS</p><h3>Galeria do jogo</h3></div><button id="closeGallery" class="icon-btn">✕</button></div><p>Os cenários, personagens, objetos e referências visuais enviados para o projeto estão preservados no pacote.</p><div id="galleryGrid" class="gallery-grid"></div></div></dialog>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-</div>
-<script src="app.js"></script>
-</body></html>
+/* Tablet, landscape and touch-friendly layout */
+html,body{width:100%;height:100%;height:100dvh;overscroll-behavior:none}#game,#world,#menu,#modal{height:100%;height:100dvh}button{touch-action:manipulation;cursor:pointer}#world{overflow:hidden}#menu,#modal{overflow-y:auto;align-items:center}.box,.panel{max-height:calc(100dvh - 24px);overflow-y:auto}.c img{height:clamp(70px,24dvh,230px)}.pick{gap:clamp(5px,2vw,15px)}.hud{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));font-size:clamp(12px,2vw,17px)}.controls{top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right))}#joy{left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));width:clamp(95px,21vmin,145px);height:clamp(95px,21vmin,145px)}#knob{width:42%;height:42%}.actions{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));gap:10px}.act{width:clamp(58px,12vmin,76px);height:clamp(58px,12vmin,76px)}#hero{width:clamp(52px,12vmin,90px);height:clamp(75px,17vmin,125px)}.poi{width:clamp(34px,8vmin,52px);height:clamp(34px,8vmin,52px);font-size:clamp(18px,4vmin,25px)}.panel{width:min(580px,96vw)}.ans{min-height:44px}
+@media (orientation:landscape) and (max-height:600px){.box{padding:8px 16px}.box h1{font-size:clamp(19px,5vh,30px);margin:3px}.box p{margin:4px}.c{padding:4px}.c img{height:clamp(52px,26vh,125px)}.go{margin-top:6px;padding:9px 18px}.panel{padding:10px 16px}.panel h2{margin:3px 0}.panel p{margin:7px 0}.answers{gap:5px}.ans{padding:7px 10px}#toast{top:52px}}
+@media (max-width:420px) and (orientation:portrait){.hud{padding:7px}.controls button{padding:7px}.box{padding:12px}.c img{height:clamp(100px,22vh,170px)}}
+</style></head><body>
+<section id="menu"><div class="box"><h1>🌿 Master Fértil</h1><p>O Caminho da Alimentação</p><div class="pick"><button class="c sel" data-name="Theo"><img src="assets/theo.png"><b>THEO</b></button><button class="c" data-name="Maya"><img src="assets/maya.png"><b>MAYA</b></button></div><button id="start" class="go">ENTRAR NO MUNDO ▶</button></div></section>
+<section id="game" class="hide"><div id="world"><div class="shade"></div><img id="hero" src="assets/theo.png"><div class="hud"><span id="nm">Theo</span><br><span class="money">🪙 <span id="coins">0</span></span> &nbsp; ⭐ <span id="stars">0</span></div><div class="controls"><button id="snd">🔊</button> <button id="home">⌂</button></div>
+<div class="poi" data-k="quiz" style="left:24%;top:35%">❓</div><div class="poi" data-k="npc" style="left:72%;top:31%">💬</div><div class="poi" data-k="food" style="left:78%;top:67%">🥕</div><div class="poi" data-k="gem" style="left:39%;top:67%">💎</div><div class="poi" data-k="quiz" style="left:56%;top:48%">💡</div>
+<div id="hint" class="hide">INTERAGIR</div><div id="toast"></div><div id="joy"><div id="knob"></div></div><div class="actions"><button id="inter" class="act">💬<small>Interagir</small></button><button id="run" class="act">🏃<small>Correr</small></button></div></div></section>
+<div id="modal" class="hide"><div class="panel"><h2 id="title"></h2><p id="question"></p><div id="answers" class="answers"></div><button id="close" class="go">Continuar</button></div></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];let who="Theo",x=.5,y=.8,vx=0,vy=0,coins=0,stars=0,near=null,running=false,sound=true,last=performance.now();
+function beep(f=600,d=.08){if(!sound)return;let A=new(window.AudioContext||window.webkitAudioContext)(),o=A.createOscillator(),g=A.createGain();o.frequency.value=f;o.connect(g);g.connect(A.destination);g.gain.value=.06;o.start();g.gain.exponentialRampToValueAtTime(.001,A.currentTime+d);o.stop(A.currentTime+d)}
+$$(".c").forEach(b=>b.onclick=()=>{$$(".c").forEach(z=>z.classList.remove("sel"));b.classList.add("sel");who=b.dataset.name;beep()});
+$("#start").onclick=()=>{let src=who==="Theo"?"assets/theo.png":"assets/maya.png";$("#hero").src=src;$("#nm").textContent=who;$("#menu").classList.add("hide");$("#game").classList.remove("hide");beep(800,.12)};
+$("#home").onclick=()=>{$("#game").classList.add("hide");$("#menu").classList.remove("hide")};$("#snd").onclick=()=>{sound=!sound;$("#snd").textContent=sound?"🔊":"🔇";if(sound)beep()};
+let activeJoyPointer=null;function joy(e){let r=$("#joy").getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,m=Math.hypot(dx,dy),L=r.width*.31;if(m>L){dx*=L/m;dy*=L/m}vx=dx/L;vy=dy/L;$("#knob").style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`}
+$("#joy").onpointerdown=e=>{$("#joy").setPointerCapture(e.pointerId);activeJoyPointer=e.pointerId;joy(e)};$("#joy").onpointermove=e=>{if(e.pointerId === activeJoyPointer)joy(e)};function stop(){activeJoyPointer=null;vx=vy=0;$("#knob").style.transform="translate(-50%,-50%)"}$("#joy").onpointerup=stop;$("#joy").onpointercancel=stop;
+$("#run").onpointerdown=()=>running=true;$("#run").onpointerup=$("#run").onpointercancel=()=>running=false;
+addEventListener("keydown",e=>{let k=e.key.toLowerCase();if(k==="w"||e.key==="ArrowUp")vy=-1;if(k==="s"||e.key==="ArrowDown")vy=1;if(k==="a"||e.key==="ArrowLeft")vx=-1;if(k==="d"||e.key==="ArrowRight")vx=1;if(k==="e")interact();if(e.key==="Shift")running=true});addEventListener("keyup",e=>{if(["w","a","s","d"].includes(e.key.toLowerCase())||e.key.startsWith("Arrow"))vx=vy=0;if(e.key==="Shift")running=false});
+function loop(t){let dt=Math.min((t-last)/1000,.04);last=t;let s=running?.24:.14;x=Math.max(.05,Math.min(.95,x+vx*s*dt));y=Math.max(.18,Math.min(.94,y+vy*s*dt));$("#hero").style.left=x*100+"%";$("#hero").style.top=y*100+"%";if(vx<-.1)$("#hero").style.transform="translate(-50%,-75%) scaleX(-1)";if(vx>.1)$("#hero").style.transform="translate(-50%,-75%) scaleX(1)";detect();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+function detect(){if(!$("#modal").classList.contains("hide")){near=null;return}near=null;let bd=.11;$$(".poi:not(.done)").forEach(p=>{let px=parseFloat(p.style.left)/100,py=parseFloat(p.style.top)/100,d=Math.hypot(px-x,py-y);if(d<bd){bd=d;near=p}});if(near){$("#hint").classList.remove("hide");$("#hint").style.left=near.style.left;$("#hint").style.top=near.style.top}else $("#hint").classList.add("hide")}
+const Q=[["Qual opção é boa fonte de fibras?",["Frutas, verduras e grãos integrais","Somente açúcar","Somente refrigerante"],0],["Por que variar os alimentos?",["Para obter diferentes nutrientes","Porque água deixa de ser necessária","Porque um alimento contém tudo"],0]];
+function interact(){if(!near){toast("Aproxime-se de um ponto brilhante");beep(220);return}let k=near.dataset.k,q;if(k==="quiz")q=Q[Math.floor(Math.random()*Q.length)];if(k==="npc")q=["A agricultora ensina: valorize alimentos in natura ou minimamente processados.",["Entendi!"],0];if(k==="food")q=["Você encontrou vegetais. Qual escolha favorece variedade?",["Variar cores e tipos","Escolher sempre o mesmo"],0];if(k==="gem")q=["Cristal do conhecimento: a água participa de muitas funções do organismo.",["Coletar cristal"],0];$("#title").textContent=k==="quiz"?"Desafio":k==="npc"?"Conversa":k==="gem"?"Cristal":"Descoberta";$("#question").textContent=q[0];$("#answers").innerHTML="";q[1].forEach((a,i)=>{let b=document.createElement("button");b.className="ans";b.textContent=a;b.onclick=()=>answer(b,i===q[2]);$("#answers").appendChild(b)});$("#modal").classList.remove("hide");beep(720)}
+function answer(b,ok){if(!near)return;$$(".ans").forEach(z=>z.disabled=true);b.classList.add(ok?"ok":"bad");if(ok){let n=near.dataset.k==="gem"?10:5;coins+=n;stars++;$("#coins").textContent=coins;$("#stars").textContent=stars;near.classList.add("done");toast("+"+n+" moedas!");beep(950,.15)}else{toast("Resposta incorreta");beep(180,.18)}}
+function toast(t){$("#toast").textContent=t;$("#toast").classList.add("on");setTimeout(()=>$("#toast").classList.remove("on"),1500)}$("#inter").onclick=interact;$("#close").onclick=()=>{$("#modal").classList.add("hide");near=null};document.addEventListener("visibilitychange",()=>{if(document.hidden){stop();running=false}});
+window.addEventListener("blur",()=>{stop();running=false});
+window.addEventListener("resize",()=>{stop();running=false});
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");
+</script></body></html>

@@ -1,0 +1,16 @@
+Assets adicionais incluídos em 02/10/2026:
+- laboratorio-obstaculos.png
+- laboratorio-fertilidade.png
+- cozinha.png
+- praca-mediterranea.png
+- jardim.png
+- santuario-portal.png
+- recompensas.png
+- icones-coletaveis.png
+- cientista.png
+- nutricionista.png
+- maya-sprites.png
+- maya-personagem.png
+- garoto-sprites.png
+- garoto-personagem.png
+- fazendeiro.png
