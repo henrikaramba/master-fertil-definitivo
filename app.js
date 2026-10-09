@@ -73,3 +73,18 @@ function hold(btn,key){let down=e=>{e.preventDefault();ensureAudio();game.keys[k
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('#installBtn').hidden=false});$('#installBtn').onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('#installBtn').hidden=true}};
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 applySettings();updateHud();syncSelectionUI();renderMap();
+
+// Ensure gameplay is landscape on touch devices even when automatic rotation is disabled.
+(function(){
+  const gameScreen=document.getElementById('gameScreen');
+  const sync=()=>document.body.classList.toggle('playing-landscape',gameScreen.classList.contains('active') && matchMedia('(pointer:coarse)').matches);
+  new MutationObserver(sync).observe(gameScreen,{attributes:true,attributeFilter:['class']});
+  window.addEventListener('orientationchange',sync);
+  window.addEventListener('resize',sync);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){['left','right'].forEach(k=>{if(typeof game!=='undefined')game.keys[k]=false})}});
+  sync();
+  const touchButtons=document.querySelectorAll('.touch-controls button');
+  touchButtons.forEach(b=>{b.addEventListener('contextmenu',e=>e.preventDefault());b.addEventListener('touchmove',e=>e.preventDefault(),{passive:false})});
+  document.addEventListener('pointerup',()=>{if(typeof game!=='undefined'){game.keys.left=false;game.keys.right=false}});
+  document.addEventListener('pointercancel',()=>{if(typeof game!=='undefined'){game.keys.left=false;game.keys.right=false}});
+})();
