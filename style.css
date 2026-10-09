@@ -6,3 +6,82 @@
 
 @media (max-width: 980px){.hero-screen.active{grid-template-columns:1fr;padding:24px 4vw 30px}.hero-visual{height:420px}.player-grid{grid-template-columns:1fr}.phase-grid{grid-template-columns:1fr 1fr}.gallery-grid{grid-template-columns:repeat(2,1fr)}.result-panel{grid-template-columns:1fr}}
 @media (max-width: 700px){.phase-grid{grid-template-columns:1fr}.map-head,.map-actions{padding-left:16px;padding-right:16px}.touch-controls{display:flex}.hero-copy h1{font-size:42px}.cover-player-card img{height:210px}.hero-maya,.hero-theo{height:42%}.hero-guide{bottom:0}.hero-girl{bottom:0}}
+
+
+/* v6 — tablet + celular em paisagem */
+html,body{width:100%;min-height:100%;min-height:100dvh;overscroll-behavior:none}
+button,.game-viewport,.touch-controls{touch-action:none;-webkit-tap-highlight-color:transparent}
+.game-screen.active{min-height:calc(100dvh - 64px);height:calc(100dvh - 64px);overflow:hidden}
+.game-viewport{min-width:0;min-height:0;height:100%;flex:1 1 auto}
+.touch-controls{flex:0 0 auto;padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));padding-bottom:max(10px,env(safe-area-inset-bottom))}
+
+/* Qualquer aparelho realmente sensível ao toque recebe controles, mesmo tablets largos. */
+@media (hover:none) and (pointer:coarse){
+  .touch-controls{display:flex;height:94px;align-items:center;justify-content:space-between;gap:12px}
+  .touch-controls button{width:76px;height:68px;min-width:64px;flex:0 0 76px;font-size:28px;border:2px solid rgba(255,255,255,.12);box-shadow:0 6px 16px rgba(0,0,0,.24)}
+  .touch-controls button:nth-child(2){margin-right:auto}
+  .touch-controls button:nth-child(3){margin-left:auto}
+  .game-viewport{user-select:none;-webkit-user-select:none}
+}
+
+/* Tablet em retrato: HUD e jogo continuam cabendo sem esconder os controles. */
+@media (hover:none) and (pointer:coarse) and (min-width:761px){
+  .game-hud{height:58px;padding:7px 12px}
+  .game-hud .stat{padding:7px 9px;font-size:13px}
+  .player-sprite{height:170px;max-width:145px}
+  .npc-spot img{height:175px}
+}
+
+/* Celular e tablet deitados: modo de jogo ocupa a tela útil inteira. */
+@media (orientation:landscape) and (hover:none) and (pointer:coarse){
+  body.game-mode{overflow:hidden}
+  body.game-mode .topbar{display:none}
+  body.game-mode main{height:100dvh;overflow:hidden}
+  body.game-mode .game-screen.active{height:100dvh;min-height:100dvh}
+  .game-hud{height:48px;min-height:48px;padding:4px max(8px,env(safe-area-inset-left)) 4px max(8px,env(safe-area-inset-right));gap:6px}
+  .game-hud .icon-btn{width:38px;height:38px}
+  .game-hud small{font-size:10px}
+  .game-hud b{font-size:13px}
+  .game-hud .stat{font-size:11px;padding:5px 7px;border-radius:10px}
+  .game-viewport{min-height:0;height:auto;flex:1}
+  .touch-controls{height:76px;min-height:76px;padding-top:6px;padding-bottom:max(6px,env(safe-area-inset-bottom));background:rgba(7,30,25,.96)}
+  .touch-controls button{width:68px;height:58px;flex-basis:68px;font-size:25px;border-radius:15px}
+  .player-sprite{height:128px;max-width:112px}
+  .npc-spot{bottom:48px}
+  .npc-spot img{height:125px}
+  .npc-spot div{display:none}
+  .platform{bottom:38px}
+  .station{bottom:82px;transform:scale(.82);transform-origin:center bottom}
+  .exit-portal{bottom:44px;width:110px;height:110px;right:80px}
+  .exit-portal span{font-size:32px}
+  .interaction-hint{bottom:6px;font-size:12px;padding:7px 11px}
+  .question-dialog,.brief-dialog,.settings-dialog,.gallery-dialog{max-height:100dvh}
+  .question-card{width:min(900px,96vw);max-height:94dvh;overflow:auto;padding:14px 18px;border-radius:20px}
+  .question-card h3{font-size:clamp(17px,3.5vh,24px);margin:10px 0}
+  .answer-list{grid-template-columns:1fr 1fr;gap:7px}
+  .answer-option{padding:7px 9px;min-height:46px;font-size:13px}
+  .answer-option .letter{width:29px;height:29px}
+  .q-actions{margin-top:10px}
+  .feedback-box{margin-top:8px;padding:9px 11px;font-size:13px}
+  .brief-card{width:min(900px,96vw);height:min(88dvh,430px);min-height:0;grid-template-columns:32% 1fr}
+  .brief-card img{height:100%;max-height:410px}
+  .brief-card>div{padding:18px}
+  .brief-card h3{font-size:27px}
+}
+
+/* Paisagem muito baixa (celulares compactos). */
+@media (orientation:landscape) and (hover:none) and (pointer:coarse) and (max-height:500px){
+  .game-hud{height:42px;min-height:42px}
+  .touch-controls{height:68px;min-height:68px}
+  .touch-controls button{height:52px;width:64px;flex-basis:64px}
+  .player-sprite{height:108px;max-width:98px}
+  .station{bottom:68px;transform:scale(.72)}
+  .question-card{max-height:96dvh;padding:10px 14px}
+  .question-card h3{font-size:17px}
+  .answer-option{min-height:39px;padding:5px 8px;font-size:12px}
+  .q-top{gap:6px}
+  .q-category{display:none}
+}
+@media (max-width:760px) and (orientation:portrait){
+  .game-screen.active{height:calc(100dvh - 56px);min-height:calc(100dvh - 56px)}
+}
