@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102f28">
+<meta name="description" content="Jogo educativo PWA sobre alimentação e saúde reprodutiva.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="style.css">
+<title>Missão Fertilidade — Alimentação em Jogo</title>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <button class="brand" id="homeBtn" aria-label="Voltar ao início"><span>🌿</span><b>Missão Fertilidade</b></button>
+    <div class="hud-mini" id="miniHud" hidden><span>⭐ <b id="scoreMini">0</b></span><span>🪙 <b id="coinsMini">0</b></span></div>
+    <nav class="top-actions" aria-label="Ações do aplicativo">
+      <button id="soundBtn" class="icon-btn" aria-pressed="true" title="Som">🔊</button>
+      <button id="a11yBtn" class="icon-btn" title="Acessibilidade">♿</button>
+      <button id="installBtn" class="pill" hidden>Instalar</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="homeScreen" class="screen active hero-screen">
+      <div class="hero-copy">
+        <p class="eyebrow">JOGO EDUCATIVO • PWA OFFLINE</p>
+        <h1>Alimentação &amp; Fertilidade</h1>
+        <p class="lead">Explore cinco cenários, colete moedas e responda 30 desafios. Alimentação pode contribuir para a saúde reprodutiva, mas não garante gravidez.</p>
+        <div class="hero-actions"><button id="continueBtn" class="secondary xl" hidden>Continuar</button><button id="changePlayerBtn" class="primary xl" hidden>Trocar jogador</button><button id="startBtn" class="ghost xl">Escolher na tela completa</button></div>
+        <div class="feature-row"><span>🎮 Plataforma 2.5D</span><span>🔊 Som</span><span>♿ Acessível</span><span>🪙 Moedas e pontos</span><span>📴 Offline</span></div>
+        <div class="cover-picker-wrap"><p class="pick-title">Na capa do jogo, escolha quem vai jogar:</p><div class="cover-picker">
+          <button class="player-card cover-player-card" data-player="girl"><img src="assets/sprites/maya_cover.png" alt="Maya, personagem jogável com jardineira rosa e mochila"><strong>Maya</strong><span>Exploradora da horta e da alimentação saudável</span></button>
+          <button class="player-card cover-player-card" data-player="boy"><img src="assets/sprites/theo_cover.png" alt="Theo, personagem jogável com moletom preto e mochila"><strong>Theo</strong><span>Explorador curioso da ciência e da nutrição</span></button>
+        </div></div>
+      </div>
+      <div class="hero-visual" aria-hidden="true"><img src="assets/sprites/maya_cover.png" class="hero-girl hero-maya"><img src="assets/sprites/theo_cover.png" class="hero-guide hero-theo"><div class="glow"></div></div>
+    </section>
+
+    <section id="selectScreen" class="screen">
+      <div class="panel narrow"><p class="eyebrow">ESCOLHA QUEM VAI JOGAR</p><h2>Maya ou Theo</h2><p>Os dois aparecem no jogo, mas somente o personagem escolhido será controlado.</p>
+        <div class="player-grid">
+          <button class="player-card" data-player="girl"><img src="assets/sprites/maya_cover.png" alt="Maya, personagem menina com jardineira rosa e mochila"><strong>Maya</strong><span>Exploradora da horta</span></button>
+          <button class="player-card" data-player="boy"><img src="assets/sprites/theo_cover.png" alt="Theo, personagem menino com moletom preto e mochila"><strong>Theo</strong><span>Explorador curioso</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="mapScreen" class="screen">
+      <div class="map-head"><div><p class="eyebrow">MAPA DA MISSÃO</p><h2>5 fases • 30 perguntas</h2><p>Seis desafios em cada cenário. As questões e alternativas são embaralhadas.</p></div><div class="big-score"><span>⭐ <b id="mapScore">0</b> pontos</span><span>🪙 <b id="mapCoins">0</b> moedas</span></div></div>
+      <div id="phaseGrid" class="phase-grid"></div>
+      <div class="map-actions"><button id="galleryBtn" class="secondary">Galeria dos materiais</button><button id="resetBtn" class="ghost">Reiniciar progresso</button></div>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen">
+      <div class="game-hud">
+        <button id="backMapBtn" class="icon-btn" title="Mapa">🗺️</button>
+        <div><small id="phaseLabel">Fase</small><b id="phaseTitle">Cenário</b></div>
+        <div class="spacer"></div>
+        <span class="stat">⭐ <b id="scoreHud">0</b></span><span class="stat">🪙 <b id="coinsHud">0</b></span><span class="stat">❓ <b id="qHud">0/6</b></span>
+      </div>
+      <div id="gameViewport" class="game-viewport" tabindex="0" aria-label="Área do jogo. Use setas ou A e D para mover, espaço para pular e E para interagir.">
+        <div id="world" class="world">
+          <div id="sceneBg" class="scene-bg"></div>
+          <div id="platformLayer" class="platform-layer"></div>
+          <div id="coinLayer" class="coin-layer"></div>
+          <div id="stationLayer" class="station-layer"></div>
+          <img id="playerSprite" class="player-sprite" alt="Personagem jogável">
+          <div id="npcSpot" class="npc-spot" hidden><img id="npcImg" alt="Personagem guia"><div id="npcBubble"></div></div>
+          <div id="exitPortal" class="exit-portal" hidden><span>🏁</span><b>FIM DA FASE</b></div>
+        </div>
+        <div id="interactionHint" class="interaction-hint" hidden><b>E</b> Responder desafio</div>
+      </div>
+      <div class="touch-controls" aria-label="Controles por toque">
+        <button id="leftBtn" aria-label="Mover para esquerda">◀</button><button id="rightBtn" aria-label="Mover para direita">▶</button><button id="jumpBtn" aria-label="Pular">⤒</button><button id="interactBtn" aria-label="Interagir">?</button>
+      </div>
+    </section>
+
+    <section id="finalScreen" class="screen">
+      <div class="panel result-panel"><img id="finalCharacter" src="assets/sprites/girl_trophy.png" alt="Personagem comemorando"><div><p class="eyebrow">MISSÃO CONCLUÍDA</p><h2>Você completou os 30 desafios!</h2><div class="result-numbers"><div><b id="finalScore">0</b><span>pontos</span></div><div><b id="finalCoins">0</b><span>moedas</span></div><div><b id="finalCorrect">0/30</b><span>acertos</span></div></div><p class="final-message">Uma alimentação equilibrada pode contribuir para a saúde reprodutiva de homens e mulheres. Fertilidade depende de vários fatores; dificuldade para engravidar merece avaliação profissional.</p><div class="hero-actions"><button id="playAgainBtn" class="primary">Jogar novamente</button><button id="finalGalleryBtn" class="secondary">Ver galeria</button></div></div></div>
+    </section>
+  </main>
+
+  <dialog id="questionDialog" class="question-dialog">
+    <form method="dialog" class="question-card" id="questionForm">
+      <div class="q-top"><span id="qNumber" class="q-badge">DESAFIO</span><span id="qCategory" class="q-category">Alimentação & Fertilidade</span><button type="button" id="speakQuestionBtn" class="icon-btn" title="Ler pergunta em voz alta">🔈</button></div>
+      <h3 id="qText"></h3><div id="answerList" class="answer-list" role="radiogroup"></div>
+      <div id="feedbackBox" class="feedback-box" aria-live="polite" hidden></div>
+      <div class="q-actions"><button type="button" id="submitAnswerBtn" class="primary">Confirmar resposta</button><button type="button" id="continueQuestionBtn" class="primary" hidden>Continuar</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="briefDialog" class="brief-dialog"><div class="brief-card"><img id="briefNpc" alt="Guia da fase"><div><p id="briefEyebrow" class="eyebrow"></p><h3 id="briefTitle"></h3><p id="briefText"></p><button id="briefGoBtn" class="primary">Entrar na fase</button></div></div></dialog>
+
+  <dialog id="a11yDialog" class="settings-dialog"><div class="settings-card"><div class="modal-head"><h3>Acessibilidade</h3><button id="closeA11y" class="icon-btn">✕</button></div><p>As preferências ficam salvas neste dispositivo.</p>
+    <label class="toggle"><input id="largeTextToggle" type="checkbox"><span>Texto ampliado</span></label>
+    <label class="toggle"><input id="contrastToggle" type="checkbox"><span>Alto contraste</span></label>
+    <label class="toggle"><input id="motionToggle" type="checkbox"><span>Reduzir animações</span></label>
+    <label class="toggle"><input id="autoReadToggle" type="checkbox"><span>Ler perguntas automaticamente</span></label>
+    <label class="range">Volume <input id="volumeRange" type="range" min="0" max="1" step="0.05" value="0.55"></label>
+    <div class="key-help"><b>Teclado</b><span>← → ou A/D: andar</span><span>Espaço/W/↑: pular</span><span>E/Enter: responder</span></div>
+  </div></dialog>
+
+  <dialog id="galleryDialog" class="gallery-dialog"><div class="gallery-card"><div class="modal-head"><div><p class="eyebrow">MATERIAIS RECEBIDOS</p><h3>Galeria do jogo</h3></div><button id="closeGallery" class="icon-btn">✕</button></div><p>Os cenários, personagens, objetos e referências visuais enviados para o projeto estão preservados no pacote.</p><div id="galleryGrid" class="gallery-grid"></div></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</div>
+<script src="app.js"></script>
+</body></html>
